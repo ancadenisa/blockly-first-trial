@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Blockly Demo: Toolbox</title>
+<script src="../../blockly_compressed.js"></script>
+<script src="../../blocks_compressed.js"></script>
+<script src="../../msg/js/en.js"></script>
+<script src="../../javascript_compressed.js"></script>
+<style>
+body {
+	background-color: #fff;
+	font-family: sans-serif;
+}
+
+h1 {
+	font-weight: normal;
+	font-size: 140%;
+}
+</style>
+</head>
+<body>
+	<h1>
+		<a href="https://developers.google.com/blockly/">Blockly</a> &gt; <a
+			href="../index.html">Demos</a> &gt; Toolbox
+	</h1>
+
+	<p>This is a demo of a complex category structure for the toolbox.</p>
+
+	<p>
+		&rarr; More info on the <a
+			href="https://developers.google.com/blockly/installation/toolbox">Toolbox</a>...
+	</p>
+	<button onclick="check()">Verifica!</button>
+	<div id="blocklyDiv" style="height: 600px; width: 800px;"></div>
+
+	<xml id="toolbox" style="display: none"> 
+    <category name="Boolean" colour="216"> <block type="logic_compare"></block>
+	<block type="logic_operation"></block> <block type="logic_negate"></block>
+	<block type="logic_boolean"></block> <block type="logic_null"></block>
+	<block type="logic_ternary"></block> </category>  <category name="Math" colour="50">
+	<block type="math_number"></block> <block type="math_arithmetic"></block>
+	<block type="math_single"></block> <block type="math_trig"></block> <block
+		type="math_constant"></block> <block type="math_number_property"></block>
+	<block type="math_change"> <value name="DELTA"> <block
+		type="math_number"> <field name="NUM">1</field> </block> </value> </block> <block
+		type="math_round"></block> <block type="math_on_list"></block> <block
+		type="math_modulo"></block> <block type="math_constrain"> <value
+		name="LOW"> <block type="math_number"> <field
+		name="NUM">1</field> </block> </value> <value name="HIGH"> <block
+		type="math_number"> <field name="NUM">100</field> </block> </value> </block> <block
+		type="math_random_int"> <value name="FROM"> <block
+		type="math_number"> <field name="NUM">1</field> </block> </value> <value
+		name="TO"> <block type="math_number"> <field
+		name="NUM">100</field> </block> </value> </block> <block type="math_random_float"></block> </category> <category
+		colour name="Lists"> <block type="lists_create_empty"></block>
+	<block type="lists_create_with"></block> <block type="lists_repeat">
+	<value name="NUM"> <block type="math_number"> <field
+		name="NUM">5</field> </block> </value> </block> <block type="lists_length"></block> <block
+		type="lists_isEmpty"></block> <block type="lists_indexOf"></block> <block
+		type="lists_getIndex"></block> <block type="lists_setIndex"></block> </category>
+	<category name="Variables" custom="VARIABLE" colour="132"></category>   </xml>
+	<xml id="startBlocks" style="display: none"> <block type="trues"
+		inline="false" x="20" y="20"> </block> <block type="falses"
+		inline="false" x="20" y="300"> </block> </xml>
+
+
+	<script>
+		var workspace = Blockly.inject('blocklyDiv', {
+			media : '../../media/',
+			toolbox : document.getElementById('toolbox')
+		});
+		Blockly.Blocks['trues'] = {
+			init : function() {
+				this
+						.appendDummyInput()
+						.appendField("TRUE STATEMENTS")
+						.appendField(
+								new Blockly.FieldImage(
+										"https://www.gstatic.com/codesite/ph/images/star_on.gif",
+										15, 15, "*"));
+				this.appendValueInput("true1").setCheck("Boolean");
+				this.appendValueInput("true2").setCheck("Boolean");
+				this.appendValueInput("true3").setCheck("Boolean");
+				this.setColour(140);
+				this
+						.setTooltip('Construieste cu ce ai disponibil in dreapta propozitii adevarate');
+			}
+		};
+
+		Blockly.Blocks['falses'] = {
+			init : function() {
+				this
+						.appendDummyInput()
+						.appendField("FALSE STATEMENTS")
+						.appendField(
+								new Blockly.FieldImage(
+										"https://www.gstatic.com/codesite/ph/images/star_on.gif",
+										15, 15, "*"));
+				this.appendValueInput("false1").setCheck("Boolean");
+				this.appendValueInput("false2").setCheck("Boolean");
+				this.appendValueInput("false3").setCheck("Boolean");
+				this.setColour(356);
+				this
+						.setTooltip('Construieste cu ce ai disponibil in dreapta propozitii false');
+			}
+		};
+			Blockly.Xml.domToWorkspace(workspace, document
+				.getElementById('startBlocks'));
+		
+			Blockly.JavaScript['trues'] = function(block) {
+			  var statement1 = Blockly.JavaScript.valueToCode(block, 'true1', 0);
+			  var statement2 = Blockly.JavaScript.valueToCode(block, 'true2', 0);
+			  var statement3 = Blockly.JavaScript.valueToCode(block, 'true3', 0);
+			  var code;			  
+			  code = statement1 + " && " + statement2 + " && " + statement3;
+			  return [code, 0];
+			};
+			
+			Blockly.JavaScript['falses'] = function(block) {
+				  var statement1 = Blockly.JavaScript.valueToCode(block, 'false1', 0);
+				  var statement2 = Blockly.JavaScript.valueToCode(block, 'false2', 0);
+				  var statement3 = Blockly.JavaScript.valueToCode(block, 'false3', 0);
+				  var code;			  
+				  code = "!" + statement1 + " && " + "!" + statement2 + " && " + "!" + statement3;
+				  return [code, 0];
+				};
+			
+			function check(){
+				var blocks = Blockly.mainWorkspace.getAllBlocks();
+				var codeTrue = Blockly.JavaScript['trues'](blocks[0]);
+				var codeFalse = Blockly.JavaScript['falses'](blocks[1]);
+				if(eval(codeTrue[0]) == false){
+					alert("Nu toate propozitiile adevarate sunt corecte!");
+				}else if (eval(codeFalse[0]) == false){
+					alert("Nu toate propozitiile false sunt corecte!");
+				}else{
+					alert("Totul este corect!!");
+				}
+			}
+	</script>
+
+</body>
+</html>
